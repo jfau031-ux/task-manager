@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "build": "tsc",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format:check": "prettier . --check",
