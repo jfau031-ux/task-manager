@@ -15,7 +15,9 @@
     "test:coverage": "vitest run --coverage",
     "lint:fix": "eslint . --fix",
     "format": "prettier . --write",
-    "prepare": "husky"
+    "prepare": "husky",
+    "audit": "npm audit",
+    "outdated": "npm outdated"
   },
   "lint-staged": {
     "*.{ts,mts,cts,js,mjs,cjs}": [
