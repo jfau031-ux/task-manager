@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { TaskRepository } from './task.repository.js';
+import type { TaskRepository } from '../src/domain/repositories/task.repository.js';
 
 describe('TaskRepository', () => {
   it('should define the repository contract', () => {
