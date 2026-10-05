@@ -112,6 +112,24 @@ describe('PostgresTaskRepository', () => {
     expect(updatedTask?.completed).toBe(true);
   });
 
+  it('should allow clearing the task description', async () => {
+    const createdTask = await repository.create({
+      title: 'Task with description',
+      description: 'Description to clear',
+      completed: false,
+    });
+
+    const updatedTask = await repository.update(createdTask.id!, {
+      description: null,
+    });
+
+    expect(updatedTask).not.toBeNull();
+    expect(updatedTask?.id).toBe(createdTask.id);
+    expect(updatedTask?.title).toBe('Task with description');
+    expect(updatedTask?.description).toBeNull();
+    expect(updatedTask?.completed).toBe(false);
+  });
+
   it('should return null when updating a task that does not exist', async () => {
     const updatedTask = await repository.update(999999, {
       title: 'Updated title',

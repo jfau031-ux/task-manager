@@ -87,22 +87,30 @@ export class PostgresTaskRepository implements TaskRepository {
   async update(id: number, task: UpdateTaskData): Promise<Task | null> {
     const result = await pool.query<TaskRow>(
       `
-        UPDATE tasks
-        SET
-          title = COALESCE($1, title),
-          description = COALESCE($2, description),
-          completed = COALESCE($3, completed),
-          updated_at = CURRENT_TIMESTAMP
-        WHERE id = $4
-        RETURNING
-          id,
-          title,
-          description,
-          completed,
-          created_at,
-          updated_at
-      `,
-      [task.title ?? null, task.description ?? null, task.completed ?? null, id],
+      UPDATE tasks
+      SET
+        title = CASE WHEN $1::boolean THEN $2 ELSE title END,
+        description = CASE WHEN $3::boolean THEN $4 ELSE description END,
+        completed = CASE WHEN $5::boolean THEN $6 ELSE completed END,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = $7
+      RETURNING
+        id,
+        title,
+        description,
+        completed,
+        created_at,
+        updated_at
+    `,
+      [
+        'title' in task,
+        task.title ?? null,
+        'description' in task,
+        task.description ?? null,
+        'completed' in task,
+        task.completed ?? null,
+        id,
+      ],
     );
 
     const row = result.rows[0];
