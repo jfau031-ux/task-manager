@@ -14,7 +14,7 @@ export class CreateTask {
     const task = createTask(input.title);
 
     const taskToCreate = {
-      ...task,
+      title: task.title,
       description: input.description,
       completed: input.completed,
     };
