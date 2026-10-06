@@ -1,6 +1,7 @@
 import Fastify from 'fastify';
 import { describe, expect, it } from 'vitest';
 import { CreateTask } from '../../src/application/use-cases/create-task.js';
+import { GetTask } from '../../src/application/use-cases/get-task.js';
 import type { Task } from '../../src/domain/entities/task.js';
 import type { TaskRepository } from '../../src/domain/repositories/task.repository.js';
 import { TaskController } from '../../src/presentation/http/controllers/task.controller.js';
@@ -25,7 +26,9 @@ function createTestApp() {
   };
 
   const createTask = new CreateTask(repository);
-  const controller = new TaskController(createTask);
+  const getTask = new GetTask(repository);
+  const controller = new TaskController(createTask, getTask);
+
   const app = Fastify({
     ajv: {
       customOptions: {

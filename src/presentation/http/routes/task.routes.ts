@@ -7,6 +7,10 @@ interface CreateTaskBody {
   completed?: boolean;
 }
 
+interface GetTaskParams {
+  id: string;
+}
+
 interface TaskRouteOptions {
   controller: TaskController;
 }
@@ -36,5 +40,25 @@ export async function taskRoutes(app: FastifyInstance, options: TaskRouteOptions
       },
     },
     (request, reply) => options.controller.create(request, reply),
+  );
+
+  app.get<{ Params: GetTaskParams }>(
+    '/tasks/:id',
+    {
+      schema: {
+        params: {
+          type: 'object',
+          required: ['id'],
+          properties: {
+            id: {
+              type: 'string',
+              pattern: '^[1-9][0-9]*$',
+            },
+          },
+          additionalProperties: false,
+        },
+      },
+    },
+    (request, reply) => options.controller.get(request, reply),
   );
 }

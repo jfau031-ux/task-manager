@@ -1,5 +1,6 @@
 import Fastify from 'fastify';
 import { CreateTask } from '../../application/use-cases/create-task.js';
+import { GetTask } from '../../application/use-cases/get-task.js';
 import type { TaskRepository } from '../../domain/repositories/task.repository.js';
 import { PostgresTaskRepository } from '../../infrastructure/database/repositories/postgres-task.repository.js';
 import { TaskController } from './controllers/task.controller.js';
@@ -17,7 +18,8 @@ export function buildServer(repository: TaskRepository = new PostgresTaskReposit
   });
 
   const createTask = new CreateTask(repository);
-  const taskController = new TaskController(createTask);
+  const getTask = new GetTask(repository);
+  const taskController = new TaskController(createTask, getTask);
 
   void app.register(healthRoutes);
 
