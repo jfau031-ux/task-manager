@@ -1,18 +1,18 @@
 import type { FastifyInstance } from 'fastify';
-import type { CreateTask } from '../../../application/use-cases/create-task.js';
+import { TaskController } from '../controllers/task.controller.js';
+
+interface CreateTaskBody {
+  title: string;
+  description?: string | null;
+  completed?: boolean;
+}
 
 interface TaskRouteOptions {
-  createTask: CreateTask;
+  controller: TaskController;
 }
 
 export async function taskRoutes(app: FastifyInstance, options: TaskRouteOptions) {
-  app.post('/tasks', async (request) => {
-    const body = request.body as {
-      title: string;
-      description: string | null;
-      completed: boolean;
-    };
-
-    return options.createTask.execute(body);
-  });
+  app.post<{ Body: CreateTaskBody }>('/tasks', (request, reply) =>
+    options.controller.create(request, reply),
+  );
 }
