@@ -12,7 +12,29 @@ interface TaskRouteOptions {
 }
 
 export async function taskRoutes(app: FastifyInstance, options: TaskRouteOptions) {
-  app.post<{ Body: CreateTaskBody }>('/tasks', (request, reply) =>
-    options.controller.create(request, reply),
+  app.post<{ Body: CreateTaskBody }>(
+    '/tasks',
+    {
+      schema: {
+        body: {
+          type: 'object',
+          required: ['title'],
+          properties: {
+            title: {
+              type: 'string',
+              minLength: 1,
+            },
+            description: {
+              anyOf: [{ type: 'string' }, { type: 'null' }],
+            },
+            completed: {
+              type: 'boolean',
+            },
+          },
+          additionalProperties: false,
+        },
+      },
+    },
+    (request, reply) => options.controller.create(request, reply),
   );
 }
